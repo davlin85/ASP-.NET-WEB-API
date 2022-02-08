@@ -5,6 +5,19 @@ namespace _01_E_Commerce_System.Models.Entities
 {
     public class AdressEntity
     {
+        public AdressEntity()
+        {
+
+        }
+
+        public AdressEntity(string adressLine, string postalCode, string city, string country)
+        {
+            AdressLine=adressLine;
+            PostalCode=postalCode;
+            City=city;
+            Country=country;
+        }
+
         [Key]
         public int Id { get; set; }
 

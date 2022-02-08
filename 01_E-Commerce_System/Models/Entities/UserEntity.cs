@@ -5,6 +5,7 @@ namespace _01_E_Commerce_System.Models.Entities
 {
     public class UserEntity
     {
+
         [Key]
         public int Id { get; set; }
 

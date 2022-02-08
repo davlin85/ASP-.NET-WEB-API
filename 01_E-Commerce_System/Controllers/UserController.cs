@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _01_E_Commerce_System.Data;
 using _01_E_Commerce_System.Models.Entities;
+using _01_E_Commerce_System.Models;
+using _01_E_Commerce_System.Models.Output;
 
 namespace _01_E_Commerce_System.Controllers
 {
@@ -23,9 +25,13 @@ namespace _01_E_Commerce_System.Controllers
 
         // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserEntity>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+           var users = new List<UserModel>();
+            foreach (var user in await _context.Users.Include(x => x.Adresses).ToListAsync())
+                users.Add(new UserModel(user.Id, user.FirstName, user.LastName, user.Email, user.Password, new AdressModel(user.Adresses.AdressLine, user.Adresses.PostalCode, user.Adresses.City, user.Adresses.Country)));
+
+            return users;
         }
 
         // GET: api/User/5
