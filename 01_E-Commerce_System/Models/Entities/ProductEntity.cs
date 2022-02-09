@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _01_E_Commerce_System.Models.Entities
 {
+    [Index(nameof(ProductName), IsUnique = true)]
+
     public class ProductEntity
     {
         [Key]

@@ -133,6 +133,9 @@ namespace _01_E_Commerce_System.Migrations
 
                     b.HasIndex("CategoriesId");
 
+                    b.HasIndex("ProductName")
+                        .IsUnique();
+
                     b.ToTable("Products");
                 });
 
@@ -166,6 +169,9 @@ namespace _01_E_Commerce_System.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AdressesId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
