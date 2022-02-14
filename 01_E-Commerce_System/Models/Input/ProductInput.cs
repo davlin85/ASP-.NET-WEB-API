@@ -1,4 +1,4 @@
-﻿namespace _01_E_Commerce_System.Models.Forms
+﻿namespace _01_E_Commerce_System.Models.Input
 {
     public class ProductInput
     {

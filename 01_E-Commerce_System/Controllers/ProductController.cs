@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _01_E_Commerce_System.Data;
 using _01_E_Commerce_System.Models.Entities;
+using _01_E_Commerce_System.Models.Models.Product;
+using _01_E_Commerce_System.Models.Models.Category;
+using _01_E_Commerce_System.Models.Input;
 
 namespace _01_E_Commerce_System.Controllers
 {
@@ -23,34 +26,63 @@ namespace _01_E_Commerce_System.Controllers
 
         // GET: api/Product
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductEntity>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductGetPostModel>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            var products = new List<ProductGetPostModel>();
+            foreach (var product in await _context.Products.Include(x => x.Categories).ToListAsync())
+                products.Add(new ProductGetPostModel(
+                    product.Id,
+                    product.ArticleNumber,
+                    product.ProductName,
+                    product.Description,
+                    product.Price,
+                    product.Quantity,
+                    new CategoryModel(
+                        product.Categories.CategoryName)));
+
+
+            return products;
         }
 
         // GET: api/Product/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductEntity>> GetProductEntity(int id)
+        public async Task<ActionResult<ProductGetPostModel>> GetProduct(int id)
         {
-            var productEntity = await _context.Products.FindAsync(id);
+            var productEntity = await _context.Products.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
 
-            if (productEntity == null)
+            if(productEntity == null)
             {
                 return NotFound();
             }
 
-            return productEntity;
+            return new ProductGetPostModel(
+                productEntity.Id,
+                productEntity.ArticleNumber,
+                productEntity.ProductName,
+                productEntity.Description,
+                productEntity.Price,
+                productEntity.Quantity, 
+                    new CategoryModel(
+                        productEntity.Categories.CategoryName));
         }
 
         // PUT: api/Product/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProductEntity(int id, ProductEntity productEntity)
+        public async Task<ActionResult<ProductPutModel>>UpdateProduct(int id, ProductPutModel model)
         {
-            if (id != productEntity.Id)
+            if(id != model.Id)
             {
                 return BadRequest();
             }
+
+            var productEntity = await _context.Products.FindAsync(model.Id);
+                productEntity.ArticleNumber = model.ArticleNumber;
+                productEntity.ProductName = model.ProductName;
+                productEntity.Description = model.Description;
+                productEntity.Price = model.Price;
+                productEntity.Quantity = model.Quantity;
+                    new CategoryModel(
+                        model.CategoryName);
 
             _context.Entry(productEntity).State = EntityState.Modified;
 
@@ -58,9 +90,9 @@ namespace _01_E_Commerce_System.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch(DbUpdateConcurrencyException)
             {
-                if (!ProductEntityExists(id))
+                if(!ProductEntityExists(id))
                 {
                     return NotFound();
                 }
@@ -74,14 +106,39 @@ namespace _01_E_Commerce_System.Controllers
         }
 
         // POST: api/Product
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ProductEntity>> PostProductEntity(ProductEntity productEntity)
+        public async Task<ActionResult<ProductGetPostModel>> PostProduct(ProductInput model)
         {
+            if(await _context.Products.AnyAsync(x => x.ProductName == model.ProductName))
+                return BadRequest();
+
+            var productEntity = new ProductEntity(
+                model.ArticleNumber,
+                model.ProductName,
+                model.Description,
+                model.Price,
+                model.Quantity);
+
+            var categories = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryName == model.Category);
+            if (categories != null)
+                productEntity.CategoriesId = categories.Id;
+            else
+                productEntity.Categories = new CategoryEntity(
+                    model.Category);
+
             _context.Products.Add(productEntity);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProductEntity", new { id = productEntity.Id }, productEntity);
+            return CreatedAtAction("GetProduct", new {id = productEntity.Id},
+                new ProductGetPostModel(
+                    productEntity.Id,
+                    productEntity.ArticleNumber,
+                    productEntity.ProductName,
+                    productEntity.Description,
+                    productEntity.Price,
+                    productEntity.Quantity,
+                        new CategoryModel(
+                            productEntity.Categories.CategoryName)));
         }
 
         // DELETE: api/Product/5

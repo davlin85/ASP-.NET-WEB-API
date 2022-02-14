@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using _01_E_Commerce_System.Models.Models.Category;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,6 +9,15 @@ namespace _01_E_Commerce_System.Models.Entities
 
     public class ProductEntity
     {
+        public ProductEntity(decimal articleNumber, string productName, string description, decimal price, decimal quantity)
+        {
+            ArticleNumber=articleNumber;
+            ProductName=productName;
+            Description=description;
+            Price=price;
+            Quantity=quantity;
+        }
+
         [Key]
         public int Id { get; set; }
 

@@ -5,6 +5,15 @@ namespace _01_E_Commerce_System.Models.Entities
 {
     public class CategoryEntity
     {
+        public CategoryEntity()
+        {
+        }
+
+        public CategoryEntity(string categoryName)
+        {
+            CategoryName = categoryName;
+        }
+
         [Key]
         public int Id { get; set; }
 

@@ -8,9 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using _01_E_Commerce_System.Data;
 using _01_E_Commerce_System.Models.Entities;
 using _01_E_Commerce_System.Models;
-using _01_E_Commerce_System.Models.Output;
-using _01_E_Commerce_System.Models.Forms;
 using _01_E_Commerce_System.Models.Models;
+using _01_E_Commerce_System.Models.Models.User;
+using _01_E_Commerce_System.Models.Models.Adress;
+using _01_E_Commerce_System.Models.Input;
 
 namespace _01_E_Commerce_System.Controllers
 {
@@ -29,18 +30,18 @@ namespace _01_E_Commerce_System.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserGetModel>>> GetUsers()
         {
-           var users = new List<UserGetModel>();
+            var users = new List<UserGetModel>();
             foreach (var user in await _context.Users.Include(x => x.Adresses).ToListAsync())
                 users.Add(new UserGetModel(
-                    user.Id, 
-                    user.FirstName, 
-                    user.LastName, 
-                    user.Email, 
-                    new AdressModel(
-                        user.Adresses.AdressLine, 
-                        user.Adresses.PostalCode, 
-                        user.Adresses.City, 
-                        user.Adresses.Country)));
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.Email,
+                        new AdressModel(
+                            user.Adresses.AdressLine,
+                            user.Adresses.PostalCode,
+                            user.Adresses.City,
+                            user.Adresses.Country)));
 
             return users;
         }
@@ -57,21 +58,21 @@ namespace _01_E_Commerce_System.Controllers
             }
 
             return new UserGetModel(
-                userEntity.Id, 
-                userEntity.FirstName, 
-                userEntity.LastName, 
-                userEntity.Email, 
-                new AdressModel(
-                    userEntity.Adresses.AdressLine, 
-                    userEntity.Adresses.PostalCode, 
-                    userEntity.Adresses.City, 
-                    userEntity.Adresses.Country)
+                userEntity.Id,
+                userEntity.FirstName,
+                userEntity.LastName,
+                userEntity.Email,
+                    new AdressModel(
+                        userEntity.Adresses.AdressLine,
+                        userEntity.Adresses.PostalCode,
+                        userEntity.Adresses.City,
+                        userEntity.Adresses.Country)
                 );
         }
 
         // PUT: api/User/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserPutModel>>UpdateUser(int id, UserPutModel model)
+        public async Task<ActionResult<UserPutModel>> UpdateUser(int id, UserPutModel model)
         {
             {
                 if (id != model.Id)
@@ -83,11 +84,11 @@ namespace _01_E_Commerce_System.Controllers
                 userEntity.FirstName = model.FirstName;
                 userEntity.LastName = model.LastName;
                 userEntity.Email = model.Email;
-                new AdressEntity(
-                    model.AdressLine, 
-                    model.PostalCode, 
-                    model.City, 
-                    model.Country);
+                    new AdressEntity(
+                        model.AdressLine,
+                        model.PostalCode,
+                        model.City,
+                        model.Country);
 
                 _context.Entry(userEntity).State = EntityState.Modified;
 
@@ -115,13 +116,13 @@ namespace _01_E_Commerce_System.Controllers
         [HttpPost]
         public async Task<ActionResult<UserPostModel>> PostUser(UserInput model)
         {
-            if(await _context.Users.AnyAsync(x => x.Email == model.Email))
+            if (await _context.Users.AnyAsync(x => x.Email == model.Email))
                 return BadRequest();
 
             var userEntity = new UserEntity(
-                model.FirstName, 
-                model.LastName, 
-                model.Email, 
+                model.FirstName,
+                model.LastName,
+                model.Email,
                 model.Password);
 
             var adresses = await _context.Adresses.FirstOrDefaultAsync(x => x.AdressLine == model.AdressLine && x.PostalCode == model.PostalCode);
@@ -129,26 +130,26 @@ namespace _01_E_Commerce_System.Controllers
                 userEntity.AdressesId = adresses.Id;
             else
                 userEntity.Adresses = new AdressEntity(
-                    model.AdressLine, 
-                    model.PostalCode, 
-                    model.City, 
+                    model.AdressLine,
+                    model.PostalCode,
+                    model.City,
                     model.Country);
 
             _context.Users.Add(userEntity);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new {id = userEntity.Id}, 
+            return CreatedAtAction("GetUser", new { id = userEntity.Id },
                 new UserPostModel(
-                userEntity.Id, 
-                userEntity.FirstName, 
-                userEntity.LastName, 
-                userEntity.Email, 
-                userEntity.Password, 
-                new AdressModel(
-                    userEntity.Adresses.AdressLine, 
-                    userEntity.Adresses.PostalCode, 
-                    userEntity.Adresses.City, 
-                    userEntity.Adresses.Country)
+                userEntity.Id,
+                userEntity.FirstName,
+                userEntity.LastName,
+                userEntity.Email,
+                userEntity.Password,
+                    new AdressModel(
+                        userEntity.Adresses.AdressLine,
+                        userEntity.Adresses.PostalCode,
+                        userEntity.Adresses.City,
+                        userEntity.Adresses.Country)
                 ));
         }
 

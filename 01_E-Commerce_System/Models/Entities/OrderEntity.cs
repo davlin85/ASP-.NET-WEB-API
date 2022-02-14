@@ -5,6 +5,12 @@ namespace _01_E_Commerce_System.Models.Entities
 {
     public class OrderEntity
     {
+        public OrderEntity(DateTime created, string status)
+        {
+            Created=created;
+            Status=status;
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -24,9 +30,8 @@ namespace _01_E_Commerce_System.Models.Entities
         public int UsersId { get; set; }
         public UserEntity Users { get; set; }
 
-
-        [Required]
         public int ProductsId { get; set; }
         public ProductEntity Products { get; set; }
+
     }
 }
