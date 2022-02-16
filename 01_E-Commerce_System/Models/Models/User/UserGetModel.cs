@@ -1,4 +1,5 @@
-﻿using _01_E_Commerce_System.Models.Models.Adress;
+﻿using _01_E_Commerce_System.Models.Entities;
+using _01_E_Commerce_System.Models.Models.Adress;
 
 namespace _01_E_Commerce_System.Models.Models.User
 {
@@ -10,6 +11,13 @@ namespace _01_E_Commerce_System.Models.Models.User
         }
 
         public UserGetModel(string firstName, string lastName, string email, AdressModel adressModel)
+        {
+            FirstName=firstName;
+            LastName=lastName;
+            Email=email;
+        }
+
+        public UserGetModel(string firstName, string lastName, string email, AdressEntity adressEntity)
         {
             FirstName=firstName;
             LastName=lastName;

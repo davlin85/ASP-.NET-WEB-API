@@ -12,30 +12,36 @@ namespace _01_E_Commerce_System.Models.Models.Order
 
         }
 
-        public OrderGetModel(int id, DateTime updated, DateTime created, string status, UserGetModel userGetModel)
+
+        public OrderGetModel(string userFirstName, DateTime orderDate, string status)
         {
-            Id=id;
-            Updated=updated;
-            Created=created;
+            UserFirstName=userFirstName;
+            OrderDate=orderDate;
             Status=status;
         }
 
-        public OrderGetModel(int id, DateTime created, DateTime updated, string status, UserPostModel user, ProductGetPostModel product)
+        public OrderGetModel(int id, string userFirstName, DateTime orderDate, AdressModel adressModel)
         {
             Id=id;
-            Created=created;
-            Updated=updated;
+            UserFirstName=userFirstName;
+            OrderDate=orderDate;
+        }
+
+        public OrderGetModel(int id, string userFirstName, DateTime orderDate, string status, AdressModel adress)
+        {
+            Id=id;
+            UserFirstName=userFirstName;
             Status=status;
-            User=user;
-            Product=product;
+            OrderDate=orderDate;
+            Adress=adress;
         }
 
         public int Id { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime Updated { get; set; }
+        public string UserFirstName { get; set; }
+        public DateTime OrderDate { get; set; }
         public string Status { get; set; }
-        public UserPostModel User { get; set; }
-        public ProductGetPostModel Product {get; set;}
+        public AdressModel Adress { get; set; }
 
     }
+
 }

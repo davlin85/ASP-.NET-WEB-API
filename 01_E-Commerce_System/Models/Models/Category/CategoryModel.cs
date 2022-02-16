@@ -7,12 +7,12 @@
 
         }
 
-        public CategoryModel(string categoryName)
+        public CategoryModel(string category)
         {
-            CategoryName=categoryName;
+            Category=category;
         }
 
-        public string CategoryName { get; set; }
+        public string Category { get; set; }
 
     }
 }

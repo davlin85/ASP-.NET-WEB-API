@@ -7,6 +7,13 @@
 
         }
 
+        public UserPutModel(string firstName, string lastName, string email)
+        {
+            FirstName=firstName;
+            LastName=lastName;
+            Email=email;
+        }
+
         public UserPutModel(int id, string firstName, string lastName, string email)
         {
             Id=id;
@@ -15,16 +22,14 @@
             Email=email;
         }
 
-        public UserPutModel(int id, string firstName, string lastName, string email, string adressLine, string postalCode, string city, string country)
+        public UserPutModel(string firstName, string lastName, string email, string adressLine, string postalCode, string city)
         {
-            Id=id;
             FirstName=firstName;
             LastName=lastName;
             Email=email;
             AdressLine=adressLine;
             PostalCode=postalCode;
             City=city;
-            Country=country;
         }
 
 
@@ -35,6 +40,5 @@
         public string AdressLine { get; set; }
         public string PostalCode { get; set; }
         public string City { get; set; }
-        public string Country { get; set; }
     }
 }

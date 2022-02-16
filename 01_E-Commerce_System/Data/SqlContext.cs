@@ -20,5 +20,6 @@ namespace _01_E_Commerce_System.Data
         public virtual DbSet<OrderEntity> Orders { get; set; }
         public virtual DbSet<ProductEntity> Products { get; set; }
         public virtual DbSet<UserEntity> Users { get; set; }
+
     }
 }

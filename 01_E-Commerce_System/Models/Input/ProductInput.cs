@@ -2,18 +2,12 @@
 {
     public class ProductInput
     {
-        private decimal _articleNumber;
         private string _productName;
         private string _description;
         private string _category;
         private decimal _price;
         private decimal _quantity;
 
-        public decimal ArticleNumber 
-        { 
-            get { return _articleNumber; } 
-            set { _articleNumber = value; } 
-        }
 
         public string ProductName
         {

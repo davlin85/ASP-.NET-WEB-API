@@ -9,9 +9,9 @@ namespace _01_E_Commerce_System.Models.Entities
 
     public class ProductEntity
     {
-        public ProductEntity(decimal articleNumber, string productName, string description, decimal price, decimal quantity)
+
+        public ProductEntity(string productName, string description, decimal price, decimal quantity)
         {
-            ArticleNumber=articleNumber;
             ProductName=productName;
             Description=description;
             Price=price;
@@ -20,10 +20,6 @@ namespace _01_E_Commerce_System.Models.Entities
 
         [Key]
         public int Id { get; set; }
-
-        [Required]
-        [Column(TypeName = "decimal(5,0)")]
-        public decimal ArticleNumber { get; set; }
 
         [Required]
         [Column(TypeName = "nvarchar(50)")]
@@ -46,7 +42,5 @@ namespace _01_E_Commerce_System.Models.Entities
         public int CategoriesId { get; set; }
         public CategoryEntity Categories { get; set; }
 
-
-        public ICollection<OrderEntity> Orders { get; set; }
     }
 }

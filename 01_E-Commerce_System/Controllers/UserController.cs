@@ -31,7 +31,10 @@ namespace _01_E_Commerce_System.Controllers
         public async Task<ActionResult<IEnumerable<UserGetModel>>> GetUsers()
         {
             var users = new List<UserGetModel>();
-            foreach (var user in await _context.Users.Include(x => x.Adresses).ToListAsync())
+            foreach (var user in await _context.Users
+                .Include(x => x.Adresses)
+                .ToListAsync())
+
                 users.Add(new UserGetModel(
                     user.Id,
                     user.FirstName,
@@ -40,8 +43,7 @@ namespace _01_E_Commerce_System.Controllers
                         new AdressModel(
                             user.Adresses.AdressLine,
                             user.Adresses.PostalCode,
-                            user.Adresses.City,
-                            user.Adresses.Country)));
+                            user.Adresses.City)));
 
             return users;
         }
@@ -50,7 +52,9 @@ namespace _01_E_Commerce_System.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserGetModel>> GetUser(int id)
         {
-            var userEntity = await _context.Users.Include(x => x.Adresses).FirstOrDefaultAsync(x => x.Id == id);
+            var userEntity = await _context.Users
+                .Include(x => x.Adresses)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (userEntity == null)
             {
@@ -65,8 +69,7 @@ namespace _01_E_Commerce_System.Controllers
                     new AdressModel(
                         userEntity.Adresses.AdressLine,
                         userEntity.Adresses.PostalCode,
-                        userEntity.Adresses.City,
-                        userEntity.Adresses.Country)
+                        userEntity.Adresses.City)
                 );
         }
 
@@ -80,15 +83,16 @@ namespace _01_E_Commerce_System.Controllers
                     return BadRequest();
                 }
 
-                var userEntity = await _context.Users.FindAsync(model.Id);
+                var userEntity = await _context.Users
+                    .FindAsync(model.Id);
+
                 userEntity.FirstName = model.FirstName;
                 userEntity.LastName = model.LastName;
                 userEntity.Email = model.Email;
                     new AdressEntity(
                         model.AdressLine,
                         model.PostalCode,
-                        model.City,
-                        model.Country);
+                        model.City);
 
                 _context.Entry(userEntity).State = EntityState.Modified;
 
@@ -116,7 +120,9 @@ namespace _01_E_Commerce_System.Controllers
         [HttpPost]
         public async Task<ActionResult<UserPostModel>> PostUser(UserInput model)
         {
-            if (await _context.Users.AnyAsync(x => x.Email == model.Email))
+            if (await _context.Users
+                .AnyAsync(x => x.Email == model.Email))
+
                 return BadRequest();
 
             var userEntity = new UserEntity(
@@ -125,15 +131,16 @@ namespace _01_E_Commerce_System.Controllers
                 model.Email,
                 model.Password);
 
-            var adresses = await _context.Adresses.FirstOrDefaultAsync(x => x.AdressLine == model.AdressLine && x.PostalCode == model.PostalCode);
+            var adresses = await _context.Adresses
+                .FirstOrDefaultAsync(x => x.AdressLine == model.AdressLine && x.PostalCode == model.PostalCode);
+
             if (adresses != null)
                 userEntity.AdressesId = adresses.Id;
             else
                 userEntity.Adresses = new AdressEntity(
                     model.AdressLine,
                     model.PostalCode,
-                    model.City,
-                    model.Country);
+                    model.City);
 
             _context.Users.Add(userEntity);
             await _context.SaveChangesAsync();
@@ -148,8 +155,7 @@ namespace _01_E_Commerce_System.Controllers
                     new AdressModel(
                         userEntity.Adresses.AdressLine,
                         userEntity.Adresses.PostalCode,
-                        userEntity.Adresses.City,
-                        userEntity.Adresses.Country)
+                        userEntity.Adresses.City)
                 ));
         }
 
@@ -157,13 +163,17 @@ namespace _01_E_Commerce_System.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var userEntity = await _context.Users.FindAsync(id);
+            var userEntity = await _context.Users
+                .FindAsync(id);
+
             if (userEntity == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(userEntity);
+            _context.Users
+                .Remove(userEntity);
+
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -171,7 +181,8 @@ namespace _01_E_Commerce_System.Controllers
 
         private bool UserEntityExists(int id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return _context.Users
+                .Any(e => e.Id == id);
         }
     }
 }

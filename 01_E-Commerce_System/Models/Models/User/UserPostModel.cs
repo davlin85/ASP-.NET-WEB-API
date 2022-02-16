@@ -15,8 +15,8 @@ namespace _01_E_Commerce_System.Models
             FirstName=firstName;
             LastName=lastName;
             Email=email;
-            Password = password;
-            Adress = adress;
+            Password=password;
+            Adress=adress;
         }
 
         public int Id { get; set; }

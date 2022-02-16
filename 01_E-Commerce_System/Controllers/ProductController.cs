@@ -29,17 +29,18 @@ namespace _01_E_Commerce_System.Controllers
         public async Task<ActionResult<IEnumerable<ProductGetPostModel>>> GetProducts()
         {
             var products = new List<ProductGetPostModel>();
-            foreach (var product in await _context.Products.Include(x => x.Categories).ToListAsync())
+            foreach (var product in await _context.Products
+                .Include(x => x.Categories)
+                .ToListAsync())
+
                 products.Add(new ProductGetPostModel(
                     product.Id,
-                    product.ArticleNumber,
                     product.ProductName,
                     product.Description,
                     product.Price,
                     product.Quantity,
-                    new CategoryModel(
-                        product.Categories.CategoryName)));
-
+                        new CategoryModel(
+                            product.Categories.Category)));
 
             return products;
         }
@@ -48,7 +49,9 @@ namespace _01_E_Commerce_System.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductGetPostModel>> GetProduct(int id)
         {
-            var productEntity = await _context.Products.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
+            var productEntity = await _context.Products
+                .Include(x => x.Categories)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if(productEntity == null)
             {
@@ -57,13 +60,12 @@ namespace _01_E_Commerce_System.Controllers
 
             return new ProductGetPostModel(
                 productEntity.Id,
-                productEntity.ArticleNumber,
                 productEntity.ProductName,
                 productEntity.Description,
                 productEntity.Price,
                 productEntity.Quantity, 
                     new CategoryModel(
-                        productEntity.Categories.CategoryName));
+                        productEntity.Categories.Category));
         }
 
         // PUT: api/Product/5
@@ -75,14 +77,15 @@ namespace _01_E_Commerce_System.Controllers
                 return BadRequest();
             }
 
-            var productEntity = await _context.Products.FindAsync(model.Id);
-                productEntity.ArticleNumber = model.ArticleNumber;
+            var productEntity = await _context.Products
+                .FindAsync(model.Id);
+
                 productEntity.ProductName = model.ProductName;
                 productEntity.Description = model.Description;
                 productEntity.Price = model.Price;
                 productEntity.Quantity = model.Quantity;
                     new CategoryModel(
-                        model.CategoryName);
+                        model.Category);
 
             _context.Entry(productEntity).State = EntityState.Modified;
 
@@ -109,17 +112,20 @@ namespace _01_E_Commerce_System.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductGetPostModel>> PostProduct(ProductInput model)
         {
-            if(await _context.Products.AnyAsync(x => x.ProductName == model.ProductName))
+            if(await _context.Products
+                .AnyAsync(x => x.ProductName == model.ProductName))
+
                 return BadRequest();
 
             var productEntity = new ProductEntity(
-                model.ArticleNumber,
                 model.ProductName,
                 model.Description,
                 model.Price,
                 model.Quantity);
 
-            var categories = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryName == model.Category);
+            var categories = await _context.Categories.
+                FirstOrDefaultAsync(x => x.Category == model.Category);
+
             if (categories != null)
                 productEntity.CategoriesId = categories.Id;
             else
@@ -132,26 +138,29 @@ namespace _01_E_Commerce_System.Controllers
             return CreatedAtAction("GetProduct", new {id = productEntity.Id},
                 new ProductGetPostModel(
                     productEntity.Id,
-                    productEntity.ArticleNumber,
                     productEntity.ProductName,
                     productEntity.Description,
                     productEntity.Price,
                     productEntity.Quantity,
                         new CategoryModel(
-                            productEntity.Categories.CategoryName)));
+                            productEntity.Categories.Category)));
         }
 
         // DELETE: api/Product/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProductEntity(int id)
         {
-            var productEntity = await _context.Products.FindAsync(id);
+            var productEntity = await _context.Products
+                .FindAsync(id);
+
             if (productEntity == null)
             {
                 return NotFound();
             }
 
-            _context.Products.Remove(productEntity);
+            _context.Products
+                .Remove(productEntity);
+
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -159,7 +168,8 @@ namespace _01_E_Commerce_System.Controllers
 
         private bool ProductEntityExists(int id)
         {
-            return _context.Products.Any(e => e.Id == id);
+            return _context.Products
+                .Any(e => e.Id == id);
         }
     }
 }

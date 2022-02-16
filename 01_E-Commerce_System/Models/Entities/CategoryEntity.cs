@@ -7,11 +7,12 @@ namespace _01_E_Commerce_System.Models.Entities
     {
         public CategoryEntity()
         {
+            Products = new HashSet<ProductEntity>();
         }
 
-        public CategoryEntity(string categoryName)
+        public CategoryEntity(string category)
         {
-            CategoryName = categoryName;
+            Category=category;
         }
 
         [Key]
@@ -19,9 +20,9 @@ namespace _01_E_Commerce_System.Models.Entities
 
         [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string CategoryName { get; set; }
+        public string Category { get; set; }
 
-        public ICollection<ProductEntity> Products { get; set; }
+        public virtual ICollection<ProductEntity> Products { get; set; }
 
     }
 }

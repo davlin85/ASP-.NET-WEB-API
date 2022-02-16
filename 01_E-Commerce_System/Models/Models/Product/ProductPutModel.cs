@@ -7,33 +7,30 @@
                 
         }
 
-        public ProductPutModel(int id, decimal articleNumber, string productName, string description, decimal price, decimal quantity)
+        public ProductPutModel(int id, string productName, string description, decimal price, decimal quantity)
         {
             Id=id;
-            ArticleNumber=articleNumber;
             ProductName=productName;
             Description=description;
             Price=price;
             Quantity=quantity;
         }
 
-        public ProductPutModel(int id, decimal articleNumber, string productName, string description, decimal price, decimal quantity, string categoryName)
+        public ProductPutModel(int id, string productName, string description, decimal price, decimal quantity, string category)
         {
             Id=id;
-            ArticleNumber=articleNumber;
             ProductName=productName;
             Description=description;
             Price=price;
             Quantity=quantity;
-            CategoryName=categoryName;
+            Category=category;
         }
 
         public int Id { get; set; }
-        public decimal ArticleNumber { get; set; }
         public string ProductName { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
         public decimal Quantity { get; set; }
-        public string CategoryName { get; set; }
+        public string Category { get; set; }
     }
 }

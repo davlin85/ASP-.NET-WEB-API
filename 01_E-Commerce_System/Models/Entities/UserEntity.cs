@@ -8,9 +8,6 @@ namespace _01_E_Commerce_System.Models.Entities
 
     public class UserEntity
     {
-        public UserEntity()
-        {
-        }
 
         public UserEntity(string firstName, string lastName, string email, string password)
         {
@@ -42,10 +39,7 @@ namespace _01_E_Commerce_System.Models.Entities
 
         [Required]
         public int AdressesId { get; set; }
-        public AdressEntity Adresses { get; set; } 
-
-
-        public ICollection<OrderEntity> Orders { get; set; }
+        public virtual AdressEntity Adresses { get; set; }
 
     }
 }

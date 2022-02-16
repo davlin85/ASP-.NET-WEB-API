@@ -17,7 +17,7 @@ namespace _01_E_Commerce_System.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.1")
+                .HasAnnotation("ProductVersion", "6.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -38,10 +38,6 @@ namespace _01_E_Commerce_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("char(5)");
@@ -59,7 +55,7 @@ namespace _01_E_Commerce_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("CategoryName")
+                    b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
@@ -76,27 +72,39 @@ namespace _01_E_Commerce_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("Created")
+                    b.Property<int>("AdressesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(5,0)");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductsId");
+                    b.HasIndex("AdressesId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("CategoriesId");
 
                     b.ToTable("Orders");
                 });
@@ -108,9 +116,6 @@ namespace _01_E_Commerce_System.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<decimal>("ArticleNumber")
-                        .HasColumnType("decimal(5,0)");
 
                     b.Property<int>("CategoriesId")
                         .HasColumnType("int");
@@ -178,21 +183,21 @@ namespace _01_E_Commerce_System.Migrations
 
             modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.OrderEntity", b =>
                 {
-                    b.HasOne("_01_E_Commerce_System.Models.Entities.ProductEntity", "Products")
+                    b.HasOne("_01_E_Commerce_System.Models.Entities.AdressEntity", "Adresses")
                         .WithMany("Orders")
-                        .HasForeignKey("ProductsId")
+                        .HasForeignKey("AdressesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("_01_E_Commerce_System.Models.Entities.UserEntity", "Users")
-                        .WithMany("Orders")
-                        .HasForeignKey("UsersId")
+                    b.HasOne("_01_E_Commerce_System.Models.Entities.CategoryEntity", "Categories")
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Products");
+                    b.Navigation("Adresses");
 
-                    b.Navigation("Users");
+                    b.Navigation("Categories");
                 });
 
             modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.ProductEntity", b =>
@@ -219,22 +224,14 @@ namespace _01_E_Commerce_System.Migrations
 
             modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.AdressEntity", b =>
                 {
+                    b.Navigation("Orders");
+
                     b.Navigation("Users");
                 });
 
             modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.CategoryEntity", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.ProductEntity", b =>
-                {
-                    b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.UserEntity", b =>
-                {
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
