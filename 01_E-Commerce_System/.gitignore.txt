@@ -1,7 +1,0 @@
-#Ignore all text files
-*.txt
-
-# SQL Server files
-*.mdf
-*.ldf
-*.ndf
