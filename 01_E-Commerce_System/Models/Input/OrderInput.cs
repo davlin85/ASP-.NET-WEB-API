@@ -1,15 +1,19 @@
-﻿using System.Text.RegularExpressions;
-
-namespace _01_E_Commerce_System.Models.Input
+﻿namespace _01_E_Commerce_System.Models.Input
 {
     public class OrderInput
     {
+        private string _orderNumber;
         private string _status;
-        private string _userFirstName;
+        private string _firstName;
         private string _adressLine;
-        private string _postalCode;
-        private string _city;
+        private string _productName;
+        private decimal _quantity;
 
+        public string OrderNumber
+        {
+            get { return _orderNumber; }
+            set { _orderNumber = value.Trim(); }
+        }
 
         public string Status
         {
@@ -17,14 +21,13 @@ namespace _01_E_Commerce_System.Models.Input
             set { _status = value.Trim(); }
         }
 
-        public string UserFirstName
+        public DateTime OrderDate { get; set; } = DateTime.Now;
+
+        public string FirstName
         {
-            get { return _userFirstName; }
-            set { _userFirstName = value.Trim(); }
+            get { return _firstName; }
+            set { _firstName = value.Trim(); }
         }
-
-        public DateTime Created { get; set; }
-
 
         public string AdressLine
         {
@@ -32,16 +35,16 @@ namespace _01_E_Commerce_System.Models.Input
             set { _adressLine = value.Trim(); }
         }
 
-        public string PostalCode
+        public string ProductName
         {
-            get { return _postalCode; }
-            set { _postalCode = value.Replace(" ", ""); }
+            get { return _productName; }
+            set { _productName = value.Trim(); }
         }
 
-        public string City
+        public decimal Quantity
         {
-            get { return _city; }
-            set { _city = value.Trim(); }
+            get { return _quantity; }
+            set { _quantity = value; }
         }
     }
 }

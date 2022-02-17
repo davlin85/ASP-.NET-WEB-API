@@ -55,7 +55,7 @@ namespace _01_E_Commerce_System.Controllers
 
             if(productEntity == null)
             {
-                return NotFound();
+                return NotFound("Product Id doesn't exist! Try again!");
             }
 
             return new ProductGetPostModel(
@@ -74,7 +74,7 @@ namespace _01_E_Commerce_System.Controllers
         {
             if(id != model.Id)
             {
-                return BadRequest();
+                return BadRequest("Order Id doesn't exist! Try again!");
             }
 
             var productEntity = await _context.Products
@@ -97,7 +97,7 @@ namespace _01_E_Commerce_System.Controllers
             {
                 if(!ProductEntityExists(id))
                 {
-                    return NotFound();
+                    return NotFound("Something went wrong! Try again!");
                 }
                 else
                 {
@@ -105,7 +105,7 @@ namespace _01_E_Commerce_System.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok("Your Product is updated!");
         }
 
         // POST: api/Product
@@ -115,7 +115,7 @@ namespace _01_E_Commerce_System.Controllers
             if(await _context.Products
                 .AnyAsync(x => x.ProductName == model.ProductName))
 
-                return BadRequest();
+                return BadRequest("A Product with the same Product Name already exist! Try again!");
 
             var productEntity = new ProductEntity(
                 model.ProductName,
@@ -155,7 +155,7 @@ namespace _01_E_Commerce_System.Controllers
 
             if (productEntity == null)
             {
-                return NotFound();
+                return NotFound("Product Id doesn't exist! Try again!");
             }
 
             _context.Products
@@ -163,7 +163,7 @@ namespace _01_E_Commerce_System.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Your Product is deleted!");
         }
 
         private bool ProductEntityExists(int id)

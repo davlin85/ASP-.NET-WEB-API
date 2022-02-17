@@ -5,12 +5,14 @@ namespace _01_E_Commerce_System.Models.Entities
 {
     public class OrderEntity
     {
-
-        public OrderEntity(string status, string firstName, DateTime orderDate)
+        public OrderEntity(string orderNumber, string status, DateTime orderDate, string firstName, string productName, decimal quantity)
         {
+            OrderNumber=orderNumber;
             Status=status;
-            FirstName=firstName;
             OrderDate=orderDate;
+            FirstName=firstName;
+            ProductName=productName;
+            Quantity=quantity;
         }
 
         [Key]
@@ -41,13 +43,8 @@ namespace _01_E_Commerce_System.Models.Entities
         public string ProductName { get; set; }
 
         [Required]
-        public int CategoriesId { get; set; }
-        public CategoryEntity Categories { get; set; }
-
-        [Required]
         [Column(TypeName = "decimal(5,0)")]
         public decimal Quantity { get; set; }
 
     }
-
 }

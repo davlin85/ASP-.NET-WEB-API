@@ -9,6 +9,7 @@ namespace _01_E_Commerce_System.Models.Entities
         public AdressEntity()
         {
             Users = new HashSet<UserEntity>();
+            Orders = new HashSet<OrderEntity>();
         }
 
         public AdressEntity(string adressLine, string postalCode, string city)

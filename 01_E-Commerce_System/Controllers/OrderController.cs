@@ -35,14 +35,16 @@ namespace _01_E_Commerce_System.Controllers
 
                 orders.Add(new OrderGetModel(
                     order.Id,
-                    order.FirstName,
-                    order.OrderDate,
+                    order.OrderNumber,
                     order.Status,
+                    order.OrderDate,
+                    order.FirstName,
+                    order.ProductName,
+                    order.Quantity,
                         new AdressModel(
                             order.Adresses.AdressLine,
                             order.Adresses.PostalCode,
                             order.Adresses.City)));
-
             return orders;
         }
 
@@ -54,61 +56,69 @@ namespace _01_E_Commerce_System.Controllers
                 .Include(x => x.Adresses)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (orderEntity == null)
+            if(orderEntity == null)
             {
-                return NotFound();
+                return NotFound("Order Id doesn't exist! Try again!");
             }
 
             return new OrderGetModel(
-                    orderEntity.Id,
-                    orderEntity.FirstName,
-                    orderEntity.OrderDate,
-                    orderEntity.Status,
-                        new AdressModel(
-                            orderEntity.Adresses.AdressLine,
-                            orderEntity.Adresses.PostalCode,
-                            orderEntity.Adresses.City));
+                orderEntity.Id,
+                orderEntity.OrderNumber,
+                orderEntity.Status,
+                orderEntity.OrderDate,
+                orderEntity.FirstName,
+                orderEntity.ProductName,
+                orderEntity.Quantity,
+                    new AdressModel(
+                        orderEntity.Adresses.AdressLine,
+                        orderEntity.Adresses.PostalCode,
+                        orderEntity.Adresses.City));
         }
 
         // PUT: api/Order/5
         [HttpPut("{id}")]
         public async Task<ActionResult<OrderPutModel>> UpdateOrder(int id, OrderPutModel model)
         {
-            if (id != model.Id)
             {
-                return BadRequest();
-            }
-
-            var orderEntity = await _context.Orders
-                .FindAsync(model.Id);
-
-            orderEntity.FirstName = model.UsersFirstName;
-            orderEntity.Status = model.Status;
-            new AdressEntity(
-                model.Adress.AdressLine,
-                model.Adress.PostalCode,
-                model.Adress.City);
-
-            _context.Entry(orderEntity).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderEntityExists(id))
+                if(id != model.Id)
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
+                    return BadRequest("Order Id doesn't exist! Try again!");
                 }
 
-            }
+                var orderEntity = await _context.Orders
+                    .FindAsync(model.Id);
 
-            return NoContent();
+                orderEntity.OrderNumber = model.OrderNumber;
+                orderEntity.Status = model.Status;
+                orderEntity.OrderDate = model.OrderDate;
+                orderEntity.FirstName = model.FirstName;
+                orderEntity.ProductName = model.ProductName;
+                orderEntity.Quantity = model.Quantity;
+                    new AdressEntity(
+                        model.AdressLine,
+                        model.PostalCode,
+                        model.City);
+
+                _context.Entry(orderEntity).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if(!OrderEntityExists(id))
+                    {
+                        return NotFound("Something went wrong! Try again!");
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return Ok("Your Order is updated!");
+            }
 
         }
 
@@ -117,17 +127,34 @@ namespace _01_E_Commerce_System.Controllers
         public async Task<ActionResult<OrderPostModel>> PostOrder(OrderInput model)
         {
             var orderEntity = new OrderEntity(
+                model.OrderNumber,
                 model.Status,
-                model.UserFirstName,
-                model.Created);
+                model.OrderDate,
+                model.FirstName,
+                model.ProductName,
+                model.Quantity);
+
+            var users = await _context.Users.Include(x => x.Adresses)
+                .FirstOrDefaultAsync(x => x.FirstName == model.FirstName && x.Adresses.AdressLine == model.AdressLine);
+            if (users != null)
+                orderEntity.FirstName = model.FirstName;
+            else
+                return BadRequest("First Name and Adress Line doesn't match or they don't exist. Try again or Create a new User with a new Adress!");
 
             var adresses = await _context.Adresses
-                .FirstOrDefaultAsync(x => x.AdressLine == model.AdressLine && x.PostalCode == model.PostalCode);
-
+                .FirstOrDefaultAsync(x => x.AdressLine == model.AdressLine);
             if (adresses != null)
                 orderEntity.AdressesId = adresses.Id;
             else
                 return BadRequest();
+
+            var products = await _context.Products
+                .FirstOrDefaultAsync(x => x.ProductName == model.ProductName);
+            if (products != null)
+                orderEntity.ProductName = model.ProductName;
+            else
+                return BadRequest("The Product Name doesn't exist! Create a new Product!");
+
 
             _context.Orders.Add(orderEntity);
             await _context.SaveChangesAsync();
@@ -135,13 +162,14 @@ namespace _01_E_Commerce_System.Controllers
             return CreatedAtAction("GetOrder", new { id = orderEntity.Id },
                 new OrderPostModel(
                     orderEntity.Id,
-                    orderEntity.FirstName,
-                    orderEntity.OrderDate,
+                    orderEntity.OrderNumber,
                     orderEntity.Status,
-                    new AdressModel(
-                        orderEntity.Adresses.AdressLine,
-                        orderEntity.Adresses.PostalCode,
-                        orderEntity.Adresses.City)));
+                    orderEntity.OrderDate,
+                    orderEntity.FirstName,
+                    orderEntity.ProductName,
+                    orderEntity.Quantity,
+                        new OrderAdressModel(
+                            orderEntity.Adresses.AdressLine)));
         }
 
         // DELETE: api/Order/5
@@ -151,13 +179,13 @@ namespace _01_E_Commerce_System.Controllers
             var orderEntity = await _context.Orders.FindAsync(id);
             if (orderEntity == null)
             {
-                return NotFound();
+                return NotFound("Order Id doesn't exist! Try again!");
             }
 
             _context.Orders.Remove(orderEntity);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Your Order is deleted!");
         }
 
         private bool OrderEntityExists(int id)

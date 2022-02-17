@@ -58,7 +58,7 @@ namespace _01_E_Commerce_System.Controllers
 
             if (userEntity == null)
             {
-                return NotFound();
+                return NotFound("User Id doesn't exist! Try again!");
             }
 
             return new UserGetModel(
@@ -80,7 +80,7 @@ namespace _01_E_Commerce_System.Controllers
             {
                 if (id != model.Id)
                 {
-                    return BadRequest();
+                    return BadRequest("User Id doesn't exist! Try again!");
                 }
 
                 var userEntity = await _context.Users
@@ -104,7 +104,7 @@ namespace _01_E_Commerce_System.Controllers
                 {
                     if (!UserEntityExists(id))
                     {
-                        return NotFound();
+                        return NotFound("Something went wrong! Try again!");
                     }
                     else
                     {
@@ -112,7 +112,7 @@ namespace _01_E_Commerce_System.Controllers
                     }
                 }
 
-                return NoContent();
+                return Ok("Your User is updated!");
             }
         }
 
@@ -123,7 +123,7 @@ namespace _01_E_Commerce_System.Controllers
             if (await _context.Users
                 .AnyAsync(x => x.Email == model.Email))
 
-                return BadRequest();
+                return BadRequest("A User with the same Email already exist! Try again!");
 
             var userEntity = new UserEntity(
                 model.FirstName,
@@ -168,7 +168,7 @@ namespace _01_E_Commerce_System.Controllers
 
             if (userEntity == null)
             {
-                return NotFound();
+                return NotFound("User Id doesn't exist! Try again!");
             }
 
             _context.Users
@@ -176,7 +176,7 @@ namespace _01_E_Commerce_System.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Your User is deleted!");
         }
 
         private bool UserEntityExists(int id)

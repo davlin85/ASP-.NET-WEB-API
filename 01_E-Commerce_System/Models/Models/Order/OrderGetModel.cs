@@ -1,7 +1,4 @@
 ﻿using _01_E_Commerce_System.Models.Models.Adress;
-using _01_E_Commerce_System.Models.Models.Category;
-using _01_E_Commerce_System.Models.Models.Product;
-using _01_E_Commerce_System.Models.Models.User;
 
 namespace _01_E_Commerce_System.Models.Models.Order
 {
@@ -12,36 +9,26 @@ namespace _01_E_Commerce_System.Models.Models.Order
 
         }
 
-
-        public OrderGetModel(string userFirstName, DateTime orderDate, string status)
-        {
-            UserFirstName=userFirstName;
-            OrderDate=orderDate;
-            Status=status;
-        }
-
-        public OrderGetModel(int id, string userFirstName, DateTime orderDate, AdressModel adressModel)
+        public OrderGetModel(int id, string orderNumber, string status, DateTime orderDate, string firstName, string productName, decimal quantity, AdressModel adress)
         {
             Id=id;
-            UserFirstName=userFirstName;
-            OrderDate=orderDate;
-        }
-
-        public OrderGetModel(int id, string userFirstName, DateTime orderDate, string status, AdressModel adress)
-        {
-            Id=id;
-            UserFirstName=userFirstName;
+            OrderNumber=orderNumber;
             Status=status;
             OrderDate=orderDate;
+            FirstName=firstName;
+            ProductName=productName;
+            Quantity=quantity;
             Adress=adress;
         }
 
         public int Id { get; set; }
-        public string UserFirstName { get; set; }
-        public DateTime OrderDate { get; set; }
+        public string OrderNumber { get; set; }
         public string Status { get; set; }
+        public DateTime OrderDate { get; set; } = DateTime.Now;
+        public string FirstName { get; set; }
         public AdressModel Adress { get; set; }
-
+        public string ProductName { get; set; }
+        public decimal Quantity { get; set; }
     }
 
 }

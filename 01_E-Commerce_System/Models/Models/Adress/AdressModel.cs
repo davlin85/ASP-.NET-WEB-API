@@ -1,6 +1,4 @@
-﻿using _01_E_Commerce_System.Models.Models.Product;
-
-namespace _01_E_Commerce_System.Models.Models.Adress
+﻿namespace _01_E_Commerce_System.Models.Models.Adress
 {
     public class AdressModel
     {

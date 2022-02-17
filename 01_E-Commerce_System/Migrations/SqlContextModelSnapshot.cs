@@ -75,9 +75,6 @@ namespace _01_E_Commerce_System.Migrations
                     b.Property<int>("AdressesId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("int");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
@@ -103,8 +100,6 @@ namespace _01_E_Commerce_System.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AdressesId");
-
-                    b.HasIndex("CategoriesId");
 
                     b.ToTable("Orders");
                 });
@@ -189,15 +184,7 @@ namespace _01_E_Commerce_System.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("_01_E_Commerce_System.Models.Entities.CategoryEntity", "Categories")
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Adresses");
-
-                    b.Navigation("Categories");
                 });
 
             modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.ProductEntity", b =>
