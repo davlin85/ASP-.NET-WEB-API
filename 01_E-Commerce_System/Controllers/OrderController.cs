@@ -37,10 +37,11 @@ namespace _01_E_Commerce_System.Controllers
                     order.Id,
                     order.OrderNumber,
                     order.Status,
-                    order.OrderDate,
-                    order.FirstName,
                     order.ProductName,
                     order.Quantity,
+                    order.OrderDate,
+                    order.FirstName,
+
                         new AdressModel(
                             order.Adresses.AdressLine,
                             order.Adresses.PostalCode,
@@ -65,10 +66,10 @@ namespace _01_E_Commerce_System.Controllers
                 orderEntity.Id,
                 orderEntity.OrderNumber,
                 orderEntity.Status,
-                orderEntity.OrderDate,
-                orderEntity.FirstName,
                 orderEntity.ProductName,
                 orderEntity.Quantity,
+                orderEntity.OrderDate,
+                orderEntity.FirstName,
                     new AdressModel(
                         orderEntity.Adresses.AdressLine,
                         orderEntity.Adresses.PostalCode,
@@ -88,16 +89,26 @@ namespace _01_E_Commerce_System.Controllers
                 var orderEntity = await _context.Orders
                     .FindAsync(model.Id);
 
-                orderEntity.OrderNumber = model.OrderNumber;
-                orderEntity.Status = model.Status;
-                orderEntity.OrderDate = model.OrderDate;
-                orderEntity.FirstName = model.FirstName;
-                orderEntity.ProductName = model.ProductName;
-                orderEntity.Quantity = model.Quantity;
-                    new AdressEntity(
-                        model.AdressLine,
-                        model.PostalCode,
-                        model.City);
+                var products = await _context.Products
+                    .FirstOrDefaultAsync(x => x.ProductName == model.ProductName);
+                if (products != null)
+                    orderEntity.ProductName = model.ProductName;
+                else
+                    return BadRequest("The Product Name doesn't exist! Create a new Product!");
+
+                var users = await _context.Users.Include(x => x.Adresses)
+                    .FirstOrDefaultAsync(x => x.FirstName == model.FirstName && x.Adresses.AdressLine == model.AdressLine);
+                if (users != null)
+                    orderEntity.FirstName = model.FirstName;
+                else
+                    return BadRequest("First Name and Adress Line doesn't match or they don't exist. Try again or Create a new User with a new Adress!");
+
+                var adresses = await _context.Adresses
+                    .FirstOrDefaultAsync(x => x.AdressLine == model.AdressLine);
+                if (adresses != null)
+                    orderEntity.AdressesId = adresses.Id;
+                else
+                    return BadRequest();
 
                 _context.Entry(orderEntity).State = EntityState.Modified;
 
@@ -129,10 +140,17 @@ namespace _01_E_Commerce_System.Controllers
             var orderEntity = new OrderEntity(
                 model.OrderNumber,
                 model.Status,
-                model.OrderDate,
-                model.FirstName,
                 model.ProductName,
-                model.Quantity);
+                model.Quantity,
+                model.OrderDate,
+                model.FirstName);
+
+            var products = await _context.Products
+                .FirstOrDefaultAsync(x => x.ProductName == model.ProductName);
+            if (products != null)
+                orderEntity.ProductName = model.ProductName;
+            else
+                return BadRequest("The Product Name doesn't exist! Create a new Product!");
 
             var users = await _context.Users.Include(x => x.Adresses)
                 .FirstOrDefaultAsync(x => x.FirstName == model.FirstName && x.Adresses.AdressLine == model.AdressLine);
@@ -148,12 +166,6 @@ namespace _01_E_Commerce_System.Controllers
             else
                 return BadRequest();
 
-            var products = await _context.Products
-                .FirstOrDefaultAsync(x => x.ProductName == model.ProductName);
-            if (products != null)
-                orderEntity.ProductName = model.ProductName;
-            else
-                return BadRequest("The Product Name doesn't exist! Create a new Product!");
 
 
             _context.Orders.Add(orderEntity);
@@ -164,10 +176,10 @@ namespace _01_E_Commerce_System.Controllers
                     orderEntity.Id,
                     orderEntity.OrderNumber,
                     orderEntity.Status,
-                    orderEntity.OrderDate,
-                    orderEntity.FirstName,
                     orderEntity.ProductName,
                     orderEntity.Quantity,
+                    orderEntity.OrderDate,
+                    orderEntity.FirstName,
                         new OrderAdressModel(
                             orderEntity.Adresses.AdressLine)));
         }

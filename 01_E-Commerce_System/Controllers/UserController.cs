@@ -89,7 +89,14 @@ namespace _01_E_Commerce_System.Controllers
                 userEntity.FirstName = model.FirstName;
                 userEntity.LastName = model.LastName;
                 userEntity.Email = model.Email;
-                    new AdressEntity(
+
+                var adresses = await _context.Adresses
+                    .FirstOrDefaultAsync(x => x.AdressLine == model.AdressLine && x.PostalCode == model.PostalCode);
+
+                if (adresses != null)
+                    userEntity.AdressesId = adresses.Id;
+                else
+                    userEntity.Adresses = new AdressEntity(
                         model.AdressLine,
                         model.PostalCode,
                         model.City);

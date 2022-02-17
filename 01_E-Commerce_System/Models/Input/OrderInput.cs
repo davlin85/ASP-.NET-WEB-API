@@ -4,10 +4,10 @@
     {
         private string _orderNumber;
         private string _status;
-        private string _firstName;
-        private string _adressLine;
         private string _productName;
         private decimal _quantity;
+        private string _firstName;
+        private string _adressLine;
 
         public string OrderNumber
         {
@@ -21,7 +21,17 @@
             set { _status = value.Trim(); }
         }
 
-        public DateTime OrderDate { get; set; } = DateTime.Now;
+        public string ProductName
+        {
+            get { return _productName; }
+            set { _productName = value.Trim(); }
+        }
+
+        public decimal Quantity
+        {
+            get { return _quantity; }
+            set { _quantity = value; }
+        }
 
         public string FirstName
         {
@@ -35,16 +45,7 @@
             set { _adressLine = value.Trim(); }
         }
 
-        public string ProductName
-        {
-            get { return _productName; }
-            set { _productName = value.Trim(); }
-        }
+        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
-        public decimal Quantity
-        {
-            get { return _quantity; }
-            set { _quantity = value; }
-        }
     }
 }

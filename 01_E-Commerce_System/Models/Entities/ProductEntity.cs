@@ -33,7 +33,7 @@ namespace _01_E_Commerce_System.Models.Entities
         public decimal Price { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(5,0)")]
+        [Column(TypeName = "decimal(8,2)")]
         public decimal Quantity { get; set; }
 
 

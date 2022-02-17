@@ -84,8 +84,16 @@ namespace _01_E_Commerce_System.Controllers
                 productEntity.Description = model.Description;
                 productEntity.Price = model.Price;
                 productEntity.Quantity = model.Quantity;
-                    new CategoryModel(
-                        model.Category);
+
+            var categories = await _context.Categories
+                .FirstOrDefaultAsync(x => x.Category == model.Category);
+
+            if(categories != null)
+                productEntity.CategoriesId = categories.Id;
+            else
+                productEntity.Categories = new CategoryEntity(
+                    model.Category);
+
 
             _context.Entry(productEntity).State = EntityState.Modified;
 

@@ -91,7 +91,7 @@ namespace _01_E_Commerce_System.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(5,0)");
+                        .HasColumnType("decimal(8,2)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -127,7 +127,7 @@ namespace _01_E_Commerce_System.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(5,0)");
+                        .HasColumnType("decimal(8,2)");
 
                     b.HasKey("Id");
 
