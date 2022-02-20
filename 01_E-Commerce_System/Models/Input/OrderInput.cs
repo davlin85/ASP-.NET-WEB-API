@@ -33,6 +33,7 @@
             set { _quantity = value; }
         }
 
+
         public string FirstName
         {
             get { return _firstName; }
@@ -44,8 +45,6 @@
             get { return _adressLine; }
             set { _adressLine = value.Trim(); }
         }
-
-        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
     }
 }

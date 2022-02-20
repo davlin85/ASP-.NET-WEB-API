@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _01_E_Commerce_System.Data;
-using _01_E_Commerce_System.Models.Entities;
 using _01_E_Commerce_System.Models;
 using _01_E_Commerce_System.Models.Models;
 using _01_E_Commerce_System.Models.Models.User;
 using _01_E_Commerce_System.Models.Models.Adress;
 using _01_E_Commerce_System.Models.Input;
+using _01_E_Commerce_System.Filters;
+using Microsoft.AspNetCore.Authorization;
+using _01_E_Commerce_System.Entities;
 
 namespace _01_E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class UserController : ControllerBase
     {
         private readonly SqlContext _context;
@@ -28,6 +26,8 @@ namespace _01_E_Commerce_System.Controllers
 
         // GET: api/User
         [HttpGet]
+        [UseAdminApiKey]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<UserGetModel>>> GetUsers()
         {
             var users = new List<UserGetModel>();
@@ -41,7 +41,7 @@ namespace _01_E_Commerce_System.Controllers
                     user.LastName,
                     user.Email,
                         new AdressModel(
-                            user.Adresses.AdressLine,
+                            user.Adresses.AdressLine, 
                             user.Adresses.PostalCode,
                             user.Adresses.City)));
 
@@ -50,6 +50,8 @@ namespace _01_E_Commerce_System.Controllers
 
         // GET: api/User/5
         [HttpGet("{id}")]
+        [UseAdminApiKey]
+        [Authorize]
         public async Task<ActionResult<UserGetModel>> GetUser(int id)
         {
             var userEntity = await _context.Users
@@ -69,12 +71,13 @@ namespace _01_E_Commerce_System.Controllers
                     new AdressModel(
                         userEntity.Adresses.AdressLine,
                         userEntity.Adresses.PostalCode,
-                        userEntity.Adresses.City)
-                );
+                        userEntity.Adresses.City));
         }
 
         // PUT: api/User/5
         [HttpPut("{id}")]
+        [UseAdminApiKey]
+        [Authorize]
         public async Task<ActionResult<UserPutModel>> UpdateUser(int id, UserPutModel model)
         {
             {
@@ -125,6 +128,8 @@ namespace _01_E_Commerce_System.Controllers
 
         // POST: api/User
         [HttpPost]
+        [UseAdminApiKey]
+        [Authorize]
         public async Task<ActionResult<UserPostModel>> PostUser(UserInput model)
         {
             if (await _context.Users
@@ -135,8 +140,9 @@ namespace _01_E_Commerce_System.Controllers
             var userEntity = new UserEntity(
                 model.FirstName,
                 model.LastName,
-                model.Email,
-                model.Password);
+                model.Email);
+
+            userEntity.CreatePassword(model.Password);
 
             var adresses = await _context.Adresses
                 .FirstOrDefaultAsync(x => x.AdressLine == model.AdressLine && x.PostalCode == model.PostalCode);
@@ -158,16 +164,16 @@ namespace _01_E_Commerce_System.Controllers
                 userEntity.FirstName,
                 userEntity.LastName,
                 userEntity.Email,
-                userEntity.Password,
                     new AdressModel(
                         userEntity.Adresses.AdressLine,
                         userEntity.Adresses.PostalCode,
-                        userEntity.Adresses.City)
-                ));
+                        userEntity.Adresses.City)));
         }
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
+        [UseAdminApiKey]
+        [Authorize]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var userEntity = await _context.Users

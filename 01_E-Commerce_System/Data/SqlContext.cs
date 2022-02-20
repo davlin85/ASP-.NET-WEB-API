@@ -1,4 +1,4 @@
-﻿using _01_E_Commerce_System.Models.Entities;
+﻿using _01_E_Commerce_System.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace _01_E_Commerce_System.Data
@@ -20,6 +20,7 @@ namespace _01_E_Commerce_System.Data
         public virtual DbSet<OrderEntity> Orders { get; set; }
         public virtual DbSet<ProductEntity> Products { get; set; }
         public virtual DbSet<UserEntity> Users { get; set; }
+        public virtual DbSet<AdminEntity> Admins  { get; set; }
 
     }
 }

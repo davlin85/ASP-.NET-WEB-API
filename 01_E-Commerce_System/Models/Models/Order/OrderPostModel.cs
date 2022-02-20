@@ -14,7 +14,6 @@
             Status=status;
             ProductName=productName;
             Quantity=quantity;
-            OrderDate=orderDate;
             FirstName=firstName;
             Adress=adress;
         }

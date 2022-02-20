@@ -15,7 +15,7 @@ namespace _01_E_Commerce_System.Models.Models.User
             FirstName=firstName;
             LastName=lastName;
             Email=email;
-            Adress = adress;
+            Adress=adress;
         }
 
         public int Id { get; set; }

@@ -9,7 +9,7 @@ namespace _01_E_Commerce_System.Models.Models.Order
 
         }
 
-        public OrderGetModel(int id, string orderNumber, string status, string productName, decimal quantity, DateTime orderDate, string firstName, AdressModel adress)
+        public OrderGetModel(int id, string orderNumber, string status, string productName, decimal quantity, DateTime orderDate, DateTime orderDateUpdated, string firstName, AdressModel adress)
         {
             Id=id;
             OrderNumber=orderNumber;
@@ -17,6 +17,7 @@ namespace _01_E_Commerce_System.Models.Models.Order
             ProductName=productName;
             Quantity=quantity;
             OrderDate=orderDate;
+            OrderDateUpdated=orderDateUpdated;
             FirstName=firstName;
             Adress=adress;
         }
@@ -27,6 +28,7 @@ namespace _01_E_Commerce_System.Models.Models.Order
         public string ProductName { get; set; }
         public decimal Quantity { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
+        public DateTime OrderDateUpdated { get; set; } = DateTime.UtcNow;
         public string FirstName { get; set; }
         public AdressModel Adress { get; set; }
     }

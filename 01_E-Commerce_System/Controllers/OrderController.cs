@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _01_E_Commerce_System.Data;
-using _01_E_Commerce_System.Models.Entities;
 using _01_E_Commerce_System.Models.Models.Order;
 using _01_E_Commerce_System.Models.Models.Adress;
 using _01_E_Commerce_System.Models.Input;
+using _01_E_Commerce_System.Filters;
+using Microsoft.AspNetCore.Authorization;
+using _01_E_Commerce_System.Entities;
 
 namespace _01_E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class Order : ControllerBase
     {
         private readonly SqlContext _context;
@@ -26,6 +24,7 @@ namespace _01_E_Commerce_System.Controllers
 
         // GET: api/Order
         [HttpGet]
+        [UseAdminApiKey]
         public async Task<ActionResult<IEnumerable<OrderGetModel>>> GetOrders()
         {
             var orders = new List<OrderGetModel>();
@@ -40,8 +39,8 @@ namespace _01_E_Commerce_System.Controllers
                     order.ProductName,
                     order.Quantity,
                     order.OrderDate,
+                    order.OrderDateUpdated,
                     order.FirstName,
-
                         new AdressModel(
                             order.Adresses.AdressLine,
                             order.Adresses.PostalCode,
@@ -51,6 +50,7 @@ namespace _01_E_Commerce_System.Controllers
 
         // GET: api/Order/5
         [HttpGet("{id}")]
+        [UseAdminApiKey]
         public async Task<ActionResult<OrderGetModel>> GetOrder(int id)
         {
             var orderEntity = await _context.Orders
@@ -69,6 +69,7 @@ namespace _01_E_Commerce_System.Controllers
                 orderEntity.ProductName,
                 orderEntity.Quantity,
                 orderEntity.OrderDate,
+                orderEntity.OrderDateUpdated,
                 orderEntity.FirstName,
                     new AdressModel(
                         orderEntity.Adresses.AdressLine,
@@ -78,6 +79,7 @@ namespace _01_E_Commerce_System.Controllers
 
         // PUT: api/Order/5
         [HttpPut("{id}")]
+        [UseAdminApiKey]
         public async Task<ActionResult<OrderPutModel>> UpdateOrder(int id, OrderPutModel model)
         {
             {
@@ -89,19 +91,24 @@ namespace _01_E_Commerce_System.Controllers
                 var orderEntity = await _context.Orders
                     .FindAsync(model.Id);
 
+                orderEntity.OrderNumber = model.OrderNumber;
+                orderEntity.Status = model.Status;
+                orderEntity.Quantity = model.Quantity;
+                orderEntity.OrderDateUpdated = model.OrderDateUpdated;
+
                 var products = await _context.Products
                     .FirstOrDefaultAsync(x => x.ProductName == model.ProductName);
                 if (products != null)
                     orderEntity.ProductName = model.ProductName;
                 else
-                    return BadRequest("The Product Name doesn't exist! Create a new Product!");
+                    return BadRequest("Product Name doesn't exist! Create a new Product!");
 
                 var users = await _context.Users.Include(x => x.Adresses)
                     .FirstOrDefaultAsync(x => x.FirstName == model.FirstName && x.Adresses.AdressLine == model.AdressLine);
                 if (users != null)
                     orderEntity.FirstName = model.FirstName;
                 else
-                    return BadRequest("First Name and Adress Line doesn't match or they don't exist. Try again or Create a new User with a new Adress!");
+                    return BadRequest("First Name and Adress Line doesn't match or they don't exist! Try again or Create a new User with a new Adress!");
 
                 var adresses = await _context.Adresses
                     .FirstOrDefaultAsync(x => x.AdressLine == model.AdressLine);
@@ -128,13 +135,14 @@ namespace _01_E_Commerce_System.Controllers
                     }
                 }
 
-                return Ok("Your Order is updated!");
+                return Ok("Order is updated!");
             }
 
         }
 
         // POST: api/Order
         [HttpPost]
+        [UseAdminApiKey]
         public async Task<ActionResult<OrderPostModel>> PostOrder(OrderInput model)
         {
             var orderEntity = new OrderEntity(
@@ -142,7 +150,6 @@ namespace _01_E_Commerce_System.Controllers
                 model.Status,
                 model.ProductName,
                 model.Quantity,
-                model.OrderDate,
                 model.FirstName);
 
             var products = await _context.Products
@@ -150,14 +157,14 @@ namespace _01_E_Commerce_System.Controllers
             if (products != null)
                 orderEntity.ProductName = model.ProductName;
             else
-                return BadRequest("The Product Name doesn't exist! Create a new Product!");
+                return BadRequest("Product Name doesn't exist! Create a new Product!");
 
             var users = await _context.Users.Include(x => x.Adresses)
                 .FirstOrDefaultAsync(x => x.FirstName == model.FirstName && x.Adresses.AdressLine == model.AdressLine);
             if (users != null)
                 orderEntity.FirstName = model.FirstName;
             else
-                return BadRequest("First Name and Adress Line doesn't match or they don't exist. Try again or Create a new User with a new Adress!");
+                return BadRequest("First Name and Adress Line doesn't match or they don't exist! Try again or Create a new User with a new Adress!");
 
             var adresses = await _context.Adresses
                 .FirstOrDefaultAsync(x => x.AdressLine == model.AdressLine);
@@ -186,6 +193,7 @@ namespace _01_E_Commerce_System.Controllers
 
         // DELETE: api/Order/5
         [HttpDelete("{id}")]
+        [UseAdminApiKey]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var orderEntity = await _context.Orders.FindAsync(id);
@@ -197,7 +205,7 @@ namespace _01_E_Commerce_System.Controllers
             _context.Orders.Remove(orderEntity);
             await _context.SaveChangesAsync();
 
-            return Ok("Your Order is deleted!");
+            return Ok("Order is deleted!");
         }
 
         private bool OrderEntityExists(int id)

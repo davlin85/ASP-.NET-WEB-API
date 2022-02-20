@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _01_E_Commerce_System.Data;
-using _01_E_Commerce_System.Models.Entities;
 using _01_E_Commerce_System.Models.Models.Product;
 using _01_E_Commerce_System.Models.Models.Category;
 using _01_E_Commerce_System.Models.Input;
+using _01_E_Commerce_System.Filters;
+using Microsoft.AspNetCore.Authorization;
+using _01_E_Commerce_System.Entities;
 
 namespace _01_E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly SqlContext _context;
@@ -26,6 +24,7 @@ namespace _01_E_Commerce_System.Controllers
 
         // GET: api/Product
         [HttpGet]
+        [UseAdminApiKey]
         public async Task<ActionResult<IEnumerable<ProductGetPostModel>>> GetProducts()
         {
             var products = new List<ProductGetPostModel>();
@@ -47,6 +46,7 @@ namespace _01_E_Commerce_System.Controllers
 
         // GET: api/Product/5
         [HttpGet("{id}")]
+        [UseAdminApiKey]
         public async Task<ActionResult<ProductGetPostModel>> GetProduct(int id)
         {
             var productEntity = await _context.Products
@@ -70,11 +70,12 @@ namespace _01_E_Commerce_System.Controllers
 
         // PUT: api/Product/5
         [HttpPut("{id}")]
+        [UseAdminApiKey]
         public async Task<ActionResult<ProductPutModel>>UpdateProduct(int id, ProductPutModel model)
         {
             if(id != model.Id)
             {
-                return BadRequest("Order Id doesn't exist! Try again!");
+                return BadRequest("Product Id doesn't exist! Try again!");
             }
 
             var productEntity = await _context.Products
@@ -94,7 +95,6 @@ namespace _01_E_Commerce_System.Controllers
                 productEntity.Categories = new CategoryEntity(
                     model.Category);
 
-
             _context.Entry(productEntity).State = EntityState.Modified;
 
             try
@@ -113,11 +113,12 @@ namespace _01_E_Commerce_System.Controllers
                 }
             }
 
-            return Ok("Your Product is updated!");
+            return Ok("Product is updated!");
         }
 
         // POST: api/Product
         [HttpPost]
+        [UseAdminApiKey]
         public async Task<ActionResult<ProductGetPostModel>> PostProduct(ProductInput model)
         {
             if(await _context.Products
@@ -156,6 +157,7 @@ namespace _01_E_Commerce_System.Controllers
 
         // DELETE: api/Product/5
         [HttpDelete("{id}")]
+        [UseAdminApiKey]
         public async Task<IActionResult> DeleteProductEntity(int id)
         {
             var productEntity = await _context.Products
@@ -171,7 +173,7 @@ namespace _01_E_Commerce_System.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok("Your Product is deleted!");
+            return Ok("Product is deleted!");
         }
 
         private bool ProductEntityExists(int id)

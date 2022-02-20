@@ -22,7 +22,43 @@ namespace _01_E_Commerce_System.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.AdressEntity", b =>
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.AdminEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("Security")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Admins");
+                });
+
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.AdressEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,7 +83,7 @@ namespace _01_E_Commerce_System.Migrations
                     b.ToTable("Adresses");
                 });
 
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.CategoryEntity", b =>
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.CategoryEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +100,7 @@ namespace _01_E_Commerce_System.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.OrderEntity", b =>
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.OrderEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,6 +116,9 @@ namespace _01_E_Commerce_System.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("OrderDateUpdated")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderNumber")
@@ -104,7 +143,7 @@ namespace _01_E_Commerce_System.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.ProductEntity", b =>
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.ProductEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -139,7 +178,7 @@ namespace _01_E_Commerce_System.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.UserEntity", b =>
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -162,9 +201,13 @@ namespace _01_E_Commerce_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Password")
+                    b.Property<byte[]>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("Security")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
 
@@ -176,9 +219,9 @@ namespace _01_E_Commerce_System.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.OrderEntity", b =>
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.OrderEntity", b =>
                 {
-                    b.HasOne("_01_E_Commerce_System.Models.Entities.AdressEntity", "Adresses")
+                    b.HasOne("_01_E_Commerce_System.Entities.AdressEntity", "Adresses")
                         .WithMany("Orders")
                         .HasForeignKey("AdressesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -187,9 +230,9 @@ namespace _01_E_Commerce_System.Migrations
                     b.Navigation("Adresses");
                 });
 
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.ProductEntity", b =>
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.ProductEntity", b =>
                 {
-                    b.HasOne("_01_E_Commerce_System.Models.Entities.CategoryEntity", "Categories")
+                    b.HasOne("_01_E_Commerce_System.Entities.CategoryEntity", "Categories")
                         .WithMany("Products")
                         .HasForeignKey("CategoriesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -198,9 +241,9 @@ namespace _01_E_Commerce_System.Migrations
                     b.Navigation("Categories");
                 });
 
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.UserEntity", b =>
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.UserEntity", b =>
                 {
-                    b.HasOne("_01_E_Commerce_System.Models.Entities.AdressEntity", "Adresses")
+                    b.HasOne("_01_E_Commerce_System.Entities.AdressEntity", "Adresses")
                         .WithMany("Users")
                         .HasForeignKey("AdressesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -209,14 +252,14 @@ namespace _01_E_Commerce_System.Migrations
                     b.Navigation("Adresses");
                 });
 
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.AdressEntity", b =>
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.AdressEntity", b =>
                 {
                     b.Navigation("Orders");
 
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("_01_E_Commerce_System.Models.Entities.CategoryEntity", b =>
+            modelBuilder.Entity("_01_E_Commerce_System.Entities.CategoryEntity", b =>
                 {
                     b.Navigation("Products");
                 });

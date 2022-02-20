@@ -13,7 +13,7 @@
         public string Status { get; set; }
         public string ProductName { get; set; }
         public decimal Quantity { get; set; }
-        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
+        public DateTime OrderDateUpdated { get; set; } = DateTime.UtcNow;
         public string FirstName { get; set; }
         public string AdressLine { get; set; }
 
