@@ -14,6 +14,7 @@ namespace _01_E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
 
     public class UserController : ControllerBase
     {
@@ -27,7 +28,6 @@ namespace _01_E_Commerce_System.Controllers
         // GET: api/User
         [HttpGet]
         [UseAdminApiKey]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<UserGetModel>>> GetUsers()
         {
             var users = new List<UserGetModel>();
@@ -51,7 +51,6 @@ namespace _01_E_Commerce_System.Controllers
         // GET: api/User/5
         [HttpGet("{id}")]
         [UseAdminApiKey]
-        [Authorize]
         public async Task<ActionResult<UserGetModel>> GetUser(int id)
         {
             var userEntity = await _context.Users
@@ -77,7 +76,6 @@ namespace _01_E_Commerce_System.Controllers
         // PUT: api/User/5
         [HttpPut("{id}")]
         [UseAdminApiKey]
-        [Authorize]
         public async Task<ActionResult<UserPutModel>> UpdateUser(int id, UserPutModel model)
         {
             {
@@ -129,7 +127,6 @@ namespace _01_E_Commerce_System.Controllers
         // POST: api/User
         [HttpPost]
         [UseAdminApiKey]
-        [Authorize]
         public async Task<ActionResult<UserPostModel>> PostUser(UserInput model)
         {
             if (await _context.Users
@@ -173,7 +170,6 @@ namespace _01_E_Commerce_System.Controllers
         // DELETE: api/User/5
         [HttpDelete("{id}")]
         [UseAdminApiKey]
-        [Authorize]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var userEntity = await _context.Users

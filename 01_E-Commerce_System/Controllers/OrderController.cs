@@ -25,7 +25,6 @@ namespace _01_E_Commerce_System.Controllers
         // GET: api/Order
         [HttpGet]
         [UseAdminApiKey]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<OrderGetModel>>> GetOrders()
         {
             var orders = new List<OrderGetModel>();
@@ -52,7 +51,6 @@ namespace _01_E_Commerce_System.Controllers
         // GET: api/Order/5
         [HttpGet("{id}")]
         [UseAdminApiKey]
-        [Authorize]
         public async Task<ActionResult<OrderGetModel>> GetOrder(int id)
         {
             var orderEntity = await _context.Orders
@@ -82,7 +80,6 @@ namespace _01_E_Commerce_System.Controllers
         // PUT: api/Order/5
         [HttpPut("{id}")]
         [UseAdminApiKey]
-        [Authorize]
         public async Task<ActionResult<OrderPutModel>> UpdateOrder(int id, OrderPutModel model)
         {
             {
@@ -146,7 +143,6 @@ namespace _01_E_Commerce_System.Controllers
         // POST: api/Order
         [HttpPost]
         [UseAdminApiKey]
-        [Authorize]
         public async Task<ActionResult<OrderPostModel>> PostOrder(OrderInput model)
         {
             var orderEntity = new OrderEntity(
@@ -198,7 +194,6 @@ namespace _01_E_Commerce_System.Controllers
         // DELETE: api/Order/5
         [HttpDelete("{id}")]
         [UseAdminApiKey]
-        [Authorize]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var orderEntity = await _context.Orders.FindAsync(id);
