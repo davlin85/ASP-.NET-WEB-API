@@ -25,6 +25,7 @@ namespace _01_E_Commerce_System.Controllers
         // GET: api/Product
         [HttpGet]
         [UseAdminApiKey]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ProductGetPostModel>>> GetProducts()
         {
             var products = new List<ProductGetPostModel>();
@@ -47,6 +48,7 @@ namespace _01_E_Commerce_System.Controllers
         // GET: api/Product/5
         [HttpGet("{id}")]
         [UseAdminApiKey]
+        [Authorize]
         public async Task<ActionResult<ProductGetPostModel>> GetProduct(int id)
         {
             var productEntity = await _context.Products
@@ -71,6 +73,7 @@ namespace _01_E_Commerce_System.Controllers
         // PUT: api/Product/5
         [HttpPut("{id}")]
         [UseAdminApiKey]
+        [Authorize]
         public async Task<ActionResult<ProductPutModel>>UpdateProduct(int id, ProductPutModel model)
         {
             if(id != model.Id)
@@ -119,6 +122,7 @@ namespace _01_E_Commerce_System.Controllers
         // POST: api/Product
         [HttpPost]
         [UseAdminApiKey]
+        [Authorize]
         public async Task<ActionResult<ProductGetPostModel>> PostProduct(ProductInput model)
         {
             if(await _context.Products
@@ -158,6 +162,7 @@ namespace _01_E_Commerce_System.Controllers
         // DELETE: api/Product/5
         [HttpDelete("{id}")]
         [UseAdminApiKey]
+        [Authorize]
         public async Task<IActionResult> DeleteProductEntity(int id)
         {
             var productEntity = await _context.Products

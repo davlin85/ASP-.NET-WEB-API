@@ -10,13 +10,13 @@ namespace _01_E_Commerce_System.Filters
             var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
             var apiKey = configuration.GetValue<string>("AdminApiKey");
 
-            if(!context.HttpContext.Request.Query.TryGetValue("code", out var code))
+            if (!context.HttpContext.Request.Query.TryGetValue("code", out var code))
             {
                 context.Result = new UnauthorizedResult();
                 return;
             }
 
-            if(!apiKey.Equals(code))
+            if (!apiKey.Equals(code))
             {
                 context.Result = new UnauthorizedResult();
                 return;
